@@ -57,6 +57,7 @@ defmodule TwitterWeb.Router do
     end
 
     post "/users/update-password", UserSessionController, :update_password
+    live "/tweets", TweetLive.Index, :index
   end
 
   scope "/", TwitterWeb do
@@ -70,6 +71,7 @@ defmodule TwitterWeb.Router do
     end
 
     post "/users/log-in", UserSessionController, :create
+
     delete "/users/log-out", UserSessionController, :delete
   end
 end
