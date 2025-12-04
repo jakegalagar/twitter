@@ -19,7 +19,12 @@ defmodule TwitterWeb.TweetLive.Index do
 
     <.table id="tweets" rows={@tweets}>
       <:col :let={tweet} label="ID">{tweet.id}</:col>
-      <:col :let={tweet} label="Body">{tweet.body}</:col>d
+      <:col :let={tweet} label="Body">{tweet.body}</:col>
+      <:action :let={tweet}>
+        <.link navigate={~p"/tweets/#{tweet}"}>
+          show
+        </.link>
+      </:action>
     </.table>
     """
   end

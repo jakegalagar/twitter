@@ -5,4 +5,8 @@ defmodule Twitter.Tweets do
   def list_tweets() do
     Repo.all(Tweet)
   end
+
+  def get_tweet!(id) do
+    Repo.get!(Tweet, id)
+  end
 end
