@@ -9,4 +9,10 @@ defmodule Twitter.Tweets do
   def get_tweet!(id) do
     Repo.get!(Tweet, id)
   end
+
+  def create_tweet(params) do
+    %Tweet{}
+    |> Ecto.Changeset.cast(params, [:body])
+    |> Repo.insert()
+  end
 end
