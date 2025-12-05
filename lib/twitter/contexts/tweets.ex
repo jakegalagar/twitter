@@ -15,4 +15,10 @@ defmodule Twitter.Tweets do
     |> Ecto.Changeset.cast(params, [:body])
     |> Repo.insert()
   end
+
+  def delete_tweet(id) do
+    tweet = get_tweet!(id)
+
+    Repo.delete(tweet)
+  end
 end

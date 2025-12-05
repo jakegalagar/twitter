@@ -7,9 +7,12 @@ defmodule TwitterWeb.TweetLive.Index do
   def mount(_params, _session, socket) do
     tweets = Tweets.list_tweets()
 
+    patch = ~p"/tweets"
+
     socket =
       socket
       |> assign(:tweets, tweets)
+      |> assign(:patch, patch)
 
     {:ok, socket}
   end
@@ -20,7 +23,6 @@ defmodule TwitterWeb.TweetLive.Index do
       |> apply_action(socket.assigns.live_action, params)
 
     {:noreply, socket}
-
   end
 
   defp apply_action(socket, :index, _params) do
@@ -47,11 +49,15 @@ defmodule TwitterWeb.TweetLive.Index do
         <.link navigate={~p"/tweets/#{tweet}"}>
           show
         </.link>
+
+        <.link phx-click="delete-tweet" phx-value-id={tweet.id}>
+          Delete
+        </.link>
       </:action>
     </.table>
 
     <%= if @live_action == :new do %>
-      <.modal id="tweet-modal" show>
+      <.modal id="tweet-modal" show on_cancel={JS.patch(@patch)}>
         <.live_component
           id={:new}
           module={TwitterWeb.TweetLive.FormComponent}
@@ -60,5 +66,17 @@ defmodule TwitterWeb.TweetLive.Index do
       </.modal>
     <% end %>
     """
+  end
+
+  def handle_event("delete-tweet", %{"id" => id}, socket) do
+    Tweets.delete_tweet(id)
+
+    socket =
+      socket
+      |> put_flash(:info, "Tweet was Deleted successfully.")
+      |> push_navigate(to: ~p"/tweets")
+
+    {:noreply, socket}
+
   end
 end
