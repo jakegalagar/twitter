@@ -19,6 +19,12 @@ defmodule TwitterWeb.UserLive.Index do
     <.table id="users" rows={@users}>
       <:col :let={user} label="ID">{user.id}</:col>
       <:col :let={user} label="Email">{user.email}</:col>
+
+      <:action :let={user}>
+        <.link navigate={~p"/users/#{user}"}>
+          show
+        </.link>
+      </:action>
     </.table>
     """
   end

@@ -63,6 +63,7 @@ defmodule TwitterWeb.Router do
     live "/tweets/:id/show/edit", TweetLive.Show, :edit
 
     live "/users", UserLive.Index, :index
+    live "/users/:id", UserLive.Show, :show
   end
 
   scope "/", TwitterWeb do
