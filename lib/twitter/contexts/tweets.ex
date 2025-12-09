@@ -20,7 +20,7 @@ defmodule Twitter.Tweets do
 
   def create_tweet(params) do
     %Tweet{}
-    |> Ecto.Changeset.cast(params, [:body])
+    |> Ecto.Changeset.cast(params, [:body, :user_id])
     |> Repo.insert()
   end
 
@@ -32,7 +32,7 @@ defmodule Twitter.Tweets do
 
   def update_tweets(tweet, params) do
     tweet
-    |> Ecto.Changeset.cast(params, [:body])
+    |> Ecto.Changeset.cast(params, [:body, :user_id])
     |> Repo.update()
   end
 end
