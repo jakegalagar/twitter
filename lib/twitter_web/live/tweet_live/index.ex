@@ -7,6 +7,7 @@ defmodule TwitterWeb.TweetLive.Index do
 
   def mount(_params, _session, socket) do
     tweets = Tweets.list_tweets()
+    tweets = Repo.preload(tweets, [:user])
 
     patch = ~p"/tweets"
 
@@ -47,6 +48,8 @@ defmodule TwitterWeb.TweetLive.Index do
     <.table id="tweets" rows={@tweets}>
       <:col :let={tweet} label="ID">{tweet.id}</:col>
       <:col :let={tweet} label="Body">{tweet.body}</:col>
+      <:col :let={tweet} label="User ID">{tweet.user_id}</:col>
+      <:col :let={tweet} label="User Email">{tweet.user.email}</:col>
       <:action :let={tweet}>
         <.link navigate={~p"/tweets/#{tweet}"}>
           show
