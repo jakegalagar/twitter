@@ -1,6 +1,7 @@
 defmodule TwitterWeb.TweetLive.Index do
   use TwitterWeb, :live_view
 
+  alias Twitter.Repo
   alias Twitter.Tweets
   alias Twitter.Tweets.Tweet
 
@@ -29,7 +30,7 @@ defmodule TwitterWeb.TweetLive.Index do
     socket
   end
 
-  defp apply_action(socket, :new, params) do
+  defp apply_action(socket, :new, _params) do
     socket
     |> assign(:tweet, %Tweet{})
   end
@@ -37,10 +38,11 @@ defmodule TwitterWeb.TweetLive.Index do
   def render(assigns) do
     ~H"""
     <h1>Listing Tweets</h1>
-
-    <.link navigate={~p"/tweets/new"}>
-      <.button>New</.button>
-    </.link>
+    <div class="flex justify-end mb-4">
+      <.link navigate={~p"/tweets/new"}>
+        <.button>New</.button>
+      </.link>
+    </div>
 
     <.table id="tweets" rows={@tweets}>
       <:col :let={tweet} label="ID">{tweet.id}</:col>
@@ -50,7 +52,24 @@ defmodule TwitterWeb.TweetLive.Index do
           show
         </.link>
 
-        <.link phx-click="delete-tweet" phx-value-id={tweet.id}>
+        <.link
+          phx-click="upcase"
+          phx-value-id={tweet.id}
+        >
+          Up case
+        </.link>
+
+        <.link
+          phx-click="downcase"
+          phx-value-id={tweet.id}
+        >
+          down case
+        </.link>
+
+        <.link
+          phx-click="delete-tweet"
+          phx-value-id={tweet.id}
+        >
           Delete
         </.link>
       </:action>
@@ -62,6 +81,7 @@ defmodule TwitterWeb.TweetLive.Index do
           id={:new}
           module={TwitterWeb.TweetLive.FormComponent}
           tweet={@tweet}
+          live_action={@live_action}
         />
       </.modal>
     <% end %>
@@ -77,6 +97,39 @@ defmodule TwitterWeb.TweetLive.Index do
       |> push_navigate(to: ~p"/tweets")
 
     {:noreply, socket}
+  end
 
+  def handle_event("upcase", %{"id" => id}, socket) do
+    tweet = Repo.get(Tweet, id)
+
+    upcase_body = String.upcase(tweet.body)
+
+    tweet
+    |> Ecto.Changeset.change(%{body: upcase_body})
+    |> Repo.update()
+
+    socket =
+      socket
+      |> put_flash(:info, "Body was Update successfully.")
+      |> push_navigate(to: ~p"/tweets")
+
+    {:noreply, socket}
+  end
+
+  def handle_event("downcase", %{"id" => id}, socket) do
+    tweet = Repo.get(Tweet, id)
+
+    downcase_body = String.downcase(tweet.body)
+
+    tweet
+    |> Ecto.Changeset.change(%{body: downcase_body})
+    |> Repo.update()
+
+    socket =
+      socket
+      |> put_flash(:info, "Body was downcase successfully")
+      |> push_navigate(to: ~p"/tweets")
+
+    {:noreply, socket}
   end
 end
