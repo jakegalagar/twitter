@@ -31,10 +31,19 @@ defmodule TwitterWeb.TweetLive.FormComponent do
   end
 
   def handle_event("save-tweet", %{"tweet" => tweet_params}, socket) do
-    Tweets.create_tweet(tweet_params)
+    if socket.assigns.live_action == :new do
+      Tweets.create_tweet(tweet_params)
+    else
+      tweet = socket.assigns.tweet
+      Tweets.update_tweets(tweet, tweet_params)
+    end
 
     message =
-      "Tweet was created successfully."
+      if socket.assigns.live_action == :new do
+        "Tweet was created successfully."
+      else
+        "Tweet was Update successfully."
+      end
 
     socket =
       socket

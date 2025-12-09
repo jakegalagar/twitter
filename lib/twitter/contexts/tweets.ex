@@ -21,4 +21,10 @@ defmodule Twitter.Tweets do
 
     Repo.delete(tweet)
   end
+
+  def update_tweets(tweet, params) do
+    tweet
+    |> Ecto.Changeset.cast(params, [:body])
+    |> Repo.update()
+  end
 end
