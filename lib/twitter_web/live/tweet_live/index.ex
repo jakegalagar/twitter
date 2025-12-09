@@ -6,6 +6,8 @@ defmodule TwitterWeb.TweetLive.Index do
   alias Twitter.Tweets.Tweet
 
   def mount(_params, _session, socket) do
+    IO.inspect(socket.assigns)
+
     tweets = Tweets.list_tweets()
     tweets = Repo.preload(tweets, [:user])
 
@@ -49,7 +51,7 @@ defmodule TwitterWeb.TweetLive.Index do
       <:col :let={tweet} label="ID">{tweet.id}</:col>
       <:col :let={tweet} label="Body">{tweet.body}</:col>
       <:col :let={tweet} label="User ID">{tweet.user_id}</:col>
-      <:col :let={tweet} label="User Email">{tweet.user.email}</:col>
+      <:col :let={tweet} label="User Email">{tweet.user && tweet.user.email}</:col>
       <:action :let={tweet}>
         <.link navigate={~p"/tweets/#{tweet}"}>
           show

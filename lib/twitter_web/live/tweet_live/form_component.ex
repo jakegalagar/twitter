@@ -24,6 +24,7 @@ defmodule TwitterWeb.TweetLive.FormComponent do
 
       <.simple_form for={@form} phx-target={@myself} phx-submit="save-tweet">
         <.input field={@form[:body]} label="Body" />
+        <.input field={@form[:user_id]} label="User ID"/>
         <.button>save</.button>
       </.simple_form>
     </div>
@@ -31,6 +32,8 @@ defmodule TwitterWeb.TweetLive.FormComponent do
   end
 
   def handle_event("save-tweet", %{"tweet" => tweet_params}, socket) do
+
+
     if socket.assigns.live_action == :new do
       Tweets.create_tweet(tweet_params)
     else
