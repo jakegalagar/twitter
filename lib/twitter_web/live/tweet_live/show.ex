@@ -38,7 +38,7 @@ defmodule TwitterWeb.TweetLive.Show do
     <p>{@tweet.inserted_at}</p>
 
     <table class="table-auto w-full border">
-      <thead>
+
         <tr class="bg-gray-100">
           <th class="border px-2 py-1">Field</th>
           <th class="border px-2 py-1">Value</th>
@@ -53,7 +53,7 @@ defmodule TwitterWeb.TweetLive.Show do
           <td class="border px-2 py-1 font-medium">Body:</td>
           <td class="border px-2 py-1">{@tweet.body}</td>
         </tr>
-      </thead>
+
     </table>
 
     <div class="flex justify-end mb-4">

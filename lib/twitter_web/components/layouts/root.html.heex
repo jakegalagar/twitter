@@ -36,9 +36,20 @@
         <li>
           {@current_scope.user.email}
         </li>
+
+        <li>
+          <.link href={~p"/tweets"}>Tweets</.link>
+        </li>
+
+         <li>
+          <.link href={~p"/users"}>Users</.link>
+        </li>
+
         <li>
           <.link href={~p"/users/settings"}>Settings</.link>
         </li>
+
+
         <li>
           <.link href={~p"/users/log-out"} method="delete">Log out</.link>
         </li>
