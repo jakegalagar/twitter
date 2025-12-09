@@ -61,6 +61,8 @@ defmodule TwitterWeb.Router do
     live "/tweets/new", TweetLive.Index, :new
     live "/tweets/:id", TweetLive.Show, :show
     live "/tweets/:id/show/edit", TweetLive.Show, :edit
+
+    live "/users", UserLive.Index, :index
   end
 
   scope "/", TwitterWeb do
