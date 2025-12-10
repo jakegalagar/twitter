@@ -1,10 +1,14 @@
 defmodule TwitterWeb.TweetLive.Show do
   use TwitterWeb, :live_view
 
+  alias Twitter.Repo
   alias Twitter.Tweets
 
   def mount(%{"id" => id}, _session, socket) do
-    tweet = Tweets.get_tweet!(id)
+    tweet =
+      Tweets.get_tweet!(id)
+      |> Repo.preload(:user)
+
     patch = ~p"/tweets/#{id}"
 
     socket =
@@ -34,42 +38,41 @@ defmodule TwitterWeb.TweetLive.Show do
 
   def render(assigns) do
     ~H"""
-    <h1>{@tweet.body}</h1>
-    <p>{@tweet.inserted_at}</p>
+    <div class="p-4 border-b border-base-300">
+      
+    <!-- User + Avatar -->
+      <div class="flex items-center gap-3">
+        <div class="avatar placeholder">
+          <div class="bg-neutral text-neutral-content w-10 rounded-full">
+            <span>{first_letter(@tweet.user && @tweet.user.email)}</span>
+          </div>
+        </div>
 
-    <table class="table-auto w-full border">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="border px-2 py-1">Field</th>
-          <th class="border px-2 py-1">Value</th>
-        </tr>
+        <div class="flex flex-col">
+          <span class="font-bold text-lg">
+            {(@tweet.user && @tweet.user.email) || "Unknown User"}
+          </span>
+          <span class="text-sm opacity-60">@user</span>
+        </div>
+      </div>
 
-        <tr>
-          <td class="border px-2 py-1 font-medium">ID:</td>
-          <td class="border px-2 py-1">{@tweet.id}</td>
-        </tr>
+      <p class="text-xl mt-4 mb-2">
+        {@tweet.body}
+      </p>
 
-        <tr>
-          <td class="border px-2 py-1 font-medium">Body:</td>
-          <td class="border px-2 py-1">{@tweet.body}</td>
-        </tr>
-      </thead>
-    </table>
+      <div class="opacity-60 text-sm border-b border-base-300 pb-4">
+        {format_datetime(@tweet.inserted_at)}
+      </div>
 
-    <div class="flex justify-end mb-4">
-      <.link patch={~p"/tweets/#{@tweet}/show/edit"}>
-        <.button>
+      <div class="mt-4 flex gap-4">
+        <.link patch={~p"/tweets/#{@tweet}/show/edit"} class="btn btn-sm btn-primary">
           Edit
-        </.button>
-      </.link>
-    </div>
+        </.link>
 
-    <div class="flex justify-end mb-4">
-      <.link navigate={~p"/tweets"}>
-        <.button>
+        <.link navigate={~p"/tweets"} class="btn btn-sm">
           Back
-        </.button>
-      </.link>
+        </.link>
+      </div>
     </div>
 
     <%= if @live_action == :edit do %>
@@ -85,5 +88,16 @@ defmodule TwitterWeb.TweetLive.Show do
       </.modal>
     <% end %>
     """
+  end
+
+  defp first_letter(email) do
+    email
+    |> String.first()
+    |> String.upcase()
+  end
+
+  # Nice readable timestamp like Twitter
+  defp format_datetime(dt) do
+    Phoenix.HTML.Safe.to_iodata(Calendar.strftime(dt, "%b %d, %Y · %I:%M %p"))
   end
 end

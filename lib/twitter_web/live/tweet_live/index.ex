@@ -40,12 +40,7 @@ defmodule TwitterWeb.TweetLive.Index do
 
   def render(assigns) do
     ~H"""
-    <h1>Listing Tweets</h1>
-    <div class="flex justify-end mb-4">
-      <.link navigate={~p"/tweets/new"}>
-        <.button>New</.button>
-      </.link>
-    </div>
+    <ul class="font-bold text-2xl px-2 mb-4">Listing Twitter</ul>
 
     <.table id="tweets" rows={@tweets}>
       <:col :let={tweet} label="ID">{tweet.id}</:col>
@@ -53,30 +48,37 @@ defmodule TwitterWeb.TweetLive.Index do
       <:col :let={tweet} label="User ID">{tweet.user_id}</:col>
       <:col :let={tweet} label="User Email">{tweet.user && tweet.user.email}</:col>
       <:action :let={tweet}>
-        <.link navigate={~p"/tweets/#{tweet}"}>
-          show
-        </.link>
+        <.button class="hover:text-primary">
+          <.link navigate={~p"/tweets/#{tweet}"}>
+            show
+          </.link>
+        </.button>
 
-        <.link
+        <.button
+          class="hover:text-primary"
           phx-click="upcase"
           phx-value-id={tweet.id}
         >
-          Up case
-        </.link>
+          Upcase
+        </.button>
 
-        <.link
-          phx-click="downcase"
-          phx-value-id={tweet.id}
-        >
-          down case
-        </.link>
+        <.button class="hover:text-primary">
+          <.link
+            phx-click="downcase"
+            phx-value-id={tweet.id}
+          >
+            downcase
+          </.link>
+        </.button>
 
-        <.link
-          phx-click="delete-tweet"
-          phx-value-id={tweet.id}
-        >
-          Delete
-        </.link>
+        <.button class="hover:text-primary">
+          <.link
+            phx-click="delete-tweet"
+            phx-value-id={tweet.id}
+          >
+            Delete
+          </.link>
+        </.button>
       </:action>
     </.table>
 

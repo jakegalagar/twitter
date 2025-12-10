@@ -566,7 +566,6 @@ defmodule TwitterWeb.CoreComponents do
     """
   end
 
-
   @doc """
   Renders a simple form.
 
@@ -602,7 +601,6 @@ defmodule TwitterWeb.CoreComponents do
     </.form>
     """
   end
-
 
   def show_modal(js \\ %JS{}, id) when is_binary(id) do
     js
