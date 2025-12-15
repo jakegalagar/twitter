@@ -21,6 +21,7 @@ defmodule Twitter.Tweets do
   def create_tweet(params) do
     %Tweet{}
     |> Ecto.Changeset.cast(params, [:body, :user_id])
+    |> Ecto.Changeset.validate_required([:user_id, :body])
     |> Repo.insert()
   end
 
@@ -30,9 +31,10 @@ defmodule Twitter.Tweets do
     Repo.delete(tweet)
   end
 
-  def update_tweets(tweet, params) do
+  def update_tweet(tweet, params) do
     tweet
     |> Ecto.Changeset.cast(params, [:body, :user_id])
+    |> Ecto.Changeset.validate_required([:user_id, :body])
     |> Repo.update()
   end
 end

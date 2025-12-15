@@ -25,14 +25,14 @@ defmodule TwitterWeb.UserLive.Show do
     ~H"""
     <!-- PROFILE HEADER -->
     <div class="p-6 border-b border-base-300 flex items-center gap-4">
-      
+
     <!-- Avatar -->
       <div class="avatar placeholder">
         <div class="bg-neutral text-neutral-content w-16 rounded-full">
           <span class="text-xl">{first_letter(@user.email)}</span>
         </div>
       </div>
-      
+
     <!-- User Info -->
       <div>
         <h1 class="text-2xl font-bold">{@user.email}</h1>
@@ -41,7 +41,7 @@ defmodule TwitterWeb.UserLive.Show do
       </div>
 
       <div class="flex-grow"></div>
-      
+
     <!-- Back Button -->
       <.link navigate={~p"/users"} class="btn btn-sm">
         Back
@@ -51,17 +51,17 @@ defmodule TwitterWeb.UserLive.Show do
     <!-- USER TIMELINE -->
     <%= for tweet <- @tweets do %>
       <div class="p-4 border-b border-base-300 hover:bg-base-200 transition">
-        
+
     <!-- Tweet Header -->
         <div class="flex items-center gap-2 text-sm">
           <div class="font-bold">
             {@user.email}
           </div>
         </div>
-        
+
     <!-- Tweet Body -->
         <p class="mt-1">{tweet.body}</p>
-        
+
     <!-- Timestamp -->
         <p class="text-xs opacity-60 mt-2">
           {format_datetime(tweet.inserted_at)}
@@ -72,9 +72,13 @@ defmodule TwitterWeb.UserLive.Show do
   end
 
   defp first_letter(email) do
-    email
-    |> String.first()
-    |> String.upcase()
+    if email == nil do
+      nil
+    else
+      email
+      |> String.first()
+      |> String.upcase()
+    end
   end
 
   defp format_datetime(dt) do
