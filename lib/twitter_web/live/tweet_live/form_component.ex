@@ -1,15 +1,24 @@
 defmodule TwitterWeb.TweetLive.FormComponent do
   use TwitterWeb, :live_component
 
+  alias Twitter.Accounts.User
   alias Twitter.Tweets
+  alias Twitter.Repo
 
   def update(assigns, socket) do
     changeset = Ecto.Changeset.change(assigns.tweet)
     form = to_form(changeset)
 
+    options_for_user_id =
+      User
+      |> Repo.all()
+      |> Enum.map(fn user -> {user.email, user.id} end)
+      #[{"Jake", 1}, {"John", 2}, {"Anton", 3}]
+
     socket =
       socket
       |> assign(assigns)
+      |> assign(:options_for_user_id, options_for_user_id)
       |> assign(:form, form)
 
     {:ok, socket}
@@ -23,8 +32,8 @@ defmodule TwitterWeb.TweetLive.FormComponent do
       </.header>
 
       <.simple_form for={@form} phx-target={@myself} phx-submit="save-tweet">
-        <.input field={@form[:body]} label="Body" />
-        <.input field={@form[:user_id]} label="User ID" />
+        <.input type="text" field={@form[:body]} label="Body" />
+        <.input type="select" field={@form[:user_id]} options={@options_for_user_id} label="User ID" />
         <.button>save</.button>
       </.simple_form>
     </div>
