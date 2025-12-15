@@ -32,25 +32,42 @@ defmodule TwitterWeb.TweetLive.FormComponent do
   end
 
   def handle_event("save-tweet", %{"tweet" => tweet_params}, socket) do
-    if socket.assigns.live_action == :new do
-      Tweets.create_tweet(tweet_params)
-    else
-      tweet = socket.assigns.tweet
-      Tweets.update_tweets(tweet, tweet_params)
-    end
-
-    message =
-      if socket.assigns.live_action == :new do
-        "Tweet was created successfully."
-      else
-        "Tweet was Update successfully."
-      end
-
-    socket =
-      socket
-      |> put_flash(:info, message)
-      |> push_navigate(to: ~p"/tweets")
+    socket = save_tweet(socket, socket.assigns.live_action, tweet_params)
 
     {:noreply, socket}
+  end
+
+  defp save_tweet(socket, :new, tweet_params) do
+    case Tweets.create_tweet(tweet_params) do
+      {:ok, _tweet} ->
+        socket
+        |> put_flash(:info, "Tweet was created successfully.")
+        |> push_navigate(to: ~p"/tweets")
+
+      {:error, changeset} ->
+        form = to_form(changeset)
+
+        socket
+        |> assign(:form, form)
+    end
+  end
+
+  defp save_tweet(socket, :edit, tweet_params) do
+    tweet = socket.assigns.tweet
+
+    case Tweets.update_tweet(tweet, tweet_params) do
+      {:ok, _tweet} ->
+        message = "Tweet was Update successfully."
+
+        socket
+        |> put_flash(:info, message)
+        |> push_navigate(to: ~p"/tweets")
+
+      {:error, changeset} ->
+        form = to_form(changeset)
+
+        socket
+        |> assign(:form, form)
+    end
   end
 end

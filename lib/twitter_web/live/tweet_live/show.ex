@@ -39,7 +39,7 @@ defmodule TwitterWeb.TweetLive.Show do
   def render(assigns) do
     ~H"""
     <div class="p-4 border-b border-base-300">
-      
+
     <!-- User + Avatar -->
       <div class="flex items-center gap-3">
         <div class="avatar placeholder">
@@ -88,6 +88,10 @@ defmodule TwitterWeb.TweetLive.Show do
       </.modal>
     <% end %>
     """
+  end
+
+  defp first_letter(nil) do
+    nil
   end
 
   defp first_letter(email) do
